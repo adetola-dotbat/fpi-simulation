@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div id="park-container" class="row"></div>
+        <p id="nocar"></p>
+
+        <button id="add-car-button">Add New</button>
+
+        <!-- link jquery -->
+        <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+      $(function () {
+        const parkContainer = $("#park-container");
+        const defaultMinutes = 0;
+        const defaultSeconds = 9;
+        let totaldiv = 4
+        var cars = 1; 
+
+        // var newcar = ++cars;
+        // console.log(newcar);
+        generateNewCar(cars); // generate 3 cars on page load
+        
+        $("#add-car-button").click(function () {
+            if (cars<5) {
+                generateNewCar(); // generate 1 car on button click
+                cars += 1;
+                $('#nocar').html("Hello <b>world!</b>");
+            } else {
+                
+            }
+        //   cars += 1;
+        //   console.log(cars);
+        });
+
+        /**
+         * Generates a new car and adds it to the DOM
+         * @param noOfCars: number of cars to generate
+         * @returns {void}
+         */
+        function generateNewCar(noOfCars = 1) {
+          for (let i = 0; i < noOfCars; i++) {
+            const newPark =
+              $(`<div class="col-lg-3 col-md-3 wow fadeInUp cardme" data-wow-delay="200ms" data-wow-duration="1500ms">
+                <div class="pr-sv-service-innerbox">
+                    <div class="pr-sv-service-inner-icon d-flex align-items-center justify-content-center">
+                        <i class="flaticon-logistics"></i>
+                    </div>
+                    <div class="pr-sv-service-inner-text headline pera-content">
+                        <h3>
+                            <a href="#">TIME LEFT :
+                                <span style="color: red" class="countdown-timer">
+                                    ${defaultMinutes
+                                      .toString()
+                                      .padStart(2, "0")}:${defaultSeconds
+                .toString()
+                .padStart(2, "0")}
+                                    </span></a>
+                        </h3>
+                    </div>
+                </div>
+                </div>`);
+            parkContainer.append(newPark);
+
+            initCountdown(newPark);
+          }
+        }
+
+        /**
+         * Initializes the countdown timer for a car
+         * @param car: the car to initialize the countdown for
+         * @returns {void}
+         */
+
+        function initCountdown(park) {
+          const timer = park.find(".countdown-timer");
+          // set the initial time in minutes and seconds
+          const time = {
+            minutes: defaultMinutes,
+            seconds: defaultSeconds,
+          };
+
+          // update the timer every second
+          const interval = setInterval(function () {
+            // update the time
+
+            if (time.seconds <= 1) {
+              if (time.minutes <= 0) {
+                // time is up
+                cars -= 1;
+                clearInterval(interval);
+                park.remove();
+                return;
+              } else {
+                time.minutes--;
+                time.seconds = 59;
+              }
+            } else {
+              time.seconds--;
+            }
+
+            // update the timer text
+            timer.text(
+              `${time.minutes.toString().padStart(2, "0")}:${time.seconds
+                .toString()
+                .padStart(2, "0")}`
+            );
+          }, 1000);
+        }
+      });
+    </script>
+    </body>
+</html>
